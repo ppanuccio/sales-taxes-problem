@@ -60,3 +60,11 @@ Total: 98.38
 **IMPORTANT:**  Implement the requirements focusing on **writing the best code** you can produce.
 
 
+## Build and Run
+Download and install [Maven](https://maven.apache.org/) and then:
+
+```
+mvn clean install
+```
+
+You should see the result of the computation on your output console.
