@@ -64,7 +64,9 @@ Total: 98.38
 Download and install [Maven](https://maven.apache.org/) and then:
 
 ```
-mvn clean install
+git clone https://github.com/ppanuccio/sales-taxes-problem.git
+cd sales-taxes-problem
+mvn test
 ```
 
 You should see the result of the computation on your output console.
