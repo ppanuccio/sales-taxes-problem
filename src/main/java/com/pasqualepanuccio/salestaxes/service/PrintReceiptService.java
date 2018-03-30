@@ -20,13 +20,13 @@ public class PrintReceiptService implements ReceiptService {
 
     public static BiFunction<ReceiptItem, TaxesCalculatorStrategy, ReceiptItem> updateReceiptItemWithTaxedPrices = (receiptItem, taxesCalculatorStrategy) -> {
 
-        log.debug("Receipt Item to transform {}", receiptItem.toString());
+        log.debug("Receipt Item to update {}", receiptItem.toString());
 
         ReceiptItem ri = receiptItem;
         ri.calculateTotalPrice(taxesCalculatorStrategy);
         ri.calculateSalesTaxes(taxesCalculatorStrategy);
 
-        log.debug("Transformed receipt Item {}", ri.toString());
+        log.debug("Updated Receipt Item {}", ri.toString());
 
         return ri;
     };
@@ -39,25 +39,18 @@ public class PrintReceiptService implements ReceiptService {
     @Override
     public Receipt checkout(Cart cart) {
 
+        // transform Cart item to Receipt item and calculate taxes for each
         List<ReceiptItem> receiptItems = cart.getCartItems().stream()
                 .map(Cart.mapCartItemToReceiptItem)
                 .map(ri -> updateReceiptItemWithTaxedPrices.apply(ri, taxesCalculatorStrategy))
                 .collect(Collectors.toList());
 
-        /*BigDecimal salesTaxes = cart.getCartItems().stream()
-                .map(Cart.mapCartItemToReceiptItem)
-                .map(ri -> ri.calculateSalesTaxes(taxesCalculatorStrategy))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);*/
-
+        // sum of taxes
         BigDecimal salesTaxes = receiptItems.stream()
                 .map(ri -> ri.getSalesTaxes())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        /*BigDecimal total = cart.getCartItems().stream()
-                .map(Cart.mapCartItemToReceiptItem)
-                .map(ri -> ri.calculateTotalPrice(taxesCalculatorStrategy))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);*/
-
+        // sum of total price including taxes
         BigDecimal total = receiptItems.stream()
                 .map(ri -> ri.getTotalPrice())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

@@ -45,6 +45,10 @@ public class SalesTaxesProblemTest {
 
         BigDecimal rounded = NormalTaxesCalculatorStrategy.roundingOff.apply(toRound);
         Assert.assertEquals(rounded, new BigDecimal("12.55"));
+
+        toRound=new BigDecimal("58.98");
+        rounded=NormalTaxesCalculatorStrategy.roundingOff.apply(toRound);
+        Assert.assertEquals(rounded,new BigDecimal("59.00"));
     }
 
     @Test
